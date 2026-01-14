@@ -62,19 +62,21 @@ export default function PriceChart({ productId }) {
           <YAxis tick={{ fontSize: 12 }} stroke="#9ca3af" />
           <Tooltip
             contentStyle={{
-              backgroundColor: "white",
-              border: "1px solid #e5e7eb",
-              borderRadius: "6px",
+              backgroundColor: "#020617",
+              border: "1px solid #334155",
+              borderRadius: "8px",
+              color: "white",
             }}
           />
           <Line
             type="monotone"
             dataKey="price"
-            stroke="#FA5D19"
-            strokeWidth={2}
-            dot={{ fill: "#FA5D19", r: 4 }}
+            stroke="#22d3ee"
+            strokeWidth={3}
+            dot={{ fill: "#22d3ee", r: 4 }}
             activeDot={{ r: 6 }}
           />
+
         </LineChart>
       </ResponsiveContainer>
     </div>

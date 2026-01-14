@@ -32,28 +32,30 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <Card className="hover:shadow-lg transition-shadow">
-      <CardHeader className="pb-3">
+    <Card className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl hover:shadow-2xl transition">
+
+      {/* ================= HEADER ================= */}
+      <CardHeader className="pb-4">
         <div className="flex gap-4">
           {product.img_url && (
-            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={product.img_url}
               alt={product.name}
-              className="w-22 h-28 object-cover rounded-md border"
+              className="w-24 h-32 object-cover rounded-xl border border-white/20"
             />
           )}
 
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900 line-clamp-2 mb-2">
+            <h3 className="text-white font-semibold line-clamp-2 mb-2">
               {product.name}
             </h3>
 
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-orange-500">
+            <div className="flex items-center gap-2">
+              <span className="text-3xl font-bold text-cyan-400">
                 {product.currency} {product.current_price}
               </span>
-              <Badge variant="secondary" className="gap-1">
+
+              <Badge className="bg-purple-500/20 text-purple-300 gap-1">
                 <TrendingDown className="w-3 h-3" />
                 Tracking
               </Badge>
@@ -62,13 +64,19 @@ export default function ProductCard({ product }) {
         </div>
       </CardHeader>
 
+      {/* ================= ACTIONS ================= */}
       <CardContent>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3 mt-2">
+
+          {/* Show / Hide Chart */}
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
             onClick={() => setShowChart(!showChart)}
-            className="gap-1"
+            className="flex items-center gap-2 px-4 py-2 rounded-full 
+                 bg-white/5 border border-white/15 
+                 text-gray-300 hover:text-white 
+                 hover:bg-white/10 transition"
           >
             {showChart ? (
               <>
@@ -83,26 +91,41 @@ export default function ProductCard({ product }) {
             )}
           </Button>
 
-          <Button variant="outline" size="sm" asChild className="gap-1">
+          {/* View Product */}
+          <Button
+            variant="ghost"
+            size="sm"
+            asChild
+            className="flex items-center gap-2 px-4 py-2 rounded-full 
+                 bg-white/5 border border-white/15 
+                 text-gray-300 hover:text-white 
+                 hover:bg-white/10 transition"
+          >
             <Link href={product.url} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="w-4 h-4" />
-              View Product
+              View
             </Link>
           </Button>
 
+          {/* Remove */}
           <Button
             variant="ghost"
             size="sm"
             onClick={handleDelete}
             disabled={deleting}
-            className="text-red-600 hover:text-red-700 hover:bg-red-50 gap-1"
+            className="flex items-center gap-2 px-4 py-2 rounded-full 
+                 text-red-400 hover:text-red-300 
+                 hover:bg-red-500/10 transition"
           >
             <Trash2 className="w-4 h-4" />
             Remove
           </Button>
+
         </div>
       </CardContent>
 
+
+      {/* ================= CHART ================= */}
       {showChart && (
         <CardFooter className="pt-0">
           <PriceChart productId={product.id} />
