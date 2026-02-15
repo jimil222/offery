@@ -36,7 +36,8 @@ export async function POST(request) {
             updated: 0,
             failed: 0,
             priceChanges: 0,
-            alertsSent: 0
+            alertsSent: 0,
+            debug: []
         }
 
         for (const product of products) {
@@ -45,11 +46,24 @@ export async function POST(request) {
 
                 if (!productData.currentPrice) {
                     results.failed++;
+                    results.debug.push({
+                        id: product.id,
+                        error: "No currentPrice from scrape"
+                    });
                     continue;
                 }
 
                 const newPrice = parseFloat(productData.currentPrice)
                 const oldPrice = parseFloat(product.current_price)
+
+                const debugEntry = {
+                    id: product.id,
+                    name: product.name,
+                    oldPrice,
+                    newPrice,
+                    priceDrop: newPrice < oldPrice,
+                    alertTriggered: false
+                };
 
                 await supabase.from("products").update({
                     current_price: newPrice,
@@ -74,6 +88,9 @@ export async function POST(request) {
                             data: { user },
                         } = await supabase.auth.admin.getUserById(product.user_id)
 
+                        debugEntry.userFound = !!user;
+                        debugEntry.userEmail = user?.email;
+
                         if (user?.email) {
                             const emailResult = await sendPriceDropAlert(
                                 user.email,
@@ -82,19 +99,26 @@ export async function POST(request) {
                                 newPrice
                             )
 
+                            debugEntry.emailResult = emailResult;
+
                             if (emailResult.success) {
                                 results.alertsSent++
+                                debugEntry.alertTriggered = true;
                             }
                         }
                     }
                 }
+                results.debug.push(debugEntry);
 
                 results.updated++
 
             } catch (error) {
                 console.log(error);
                 results.failed++
-
+                results.debug.push({
+                    id: product.id,
+                    error: error.message
+                });
             }
         }
 
