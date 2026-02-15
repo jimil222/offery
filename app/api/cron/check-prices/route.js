@@ -36,7 +36,8 @@ export async function POST(request) {
             updated: 0,
             failed: 0,
             priceChanges: 0,
-            alertsSent: 0
+            alertsSent: 0,
+            errors: []
         }
 
         for (const product of products) {
@@ -84,6 +85,11 @@ export async function POST(request) {
 
                             if (emailResult.success) {
                                 results.alertsSent++
+                            } else {
+                                results.errors.push({
+                                    productId: product.id,
+                                    error: emailResult.error
+                                });
                             }
                         }
                     }
@@ -94,7 +100,10 @@ export async function POST(request) {
             } catch (error) {
                 console.log(error);
                 results.failed++
-
+                results.errors.push({
+                    productId: product.id,
+                    error: error.message
+                });
             }
         }
 
