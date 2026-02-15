@@ -17,7 +17,7 @@ const AuthButton = ({ user }) => {
                     variant="ghost"
                     size="sm"
                     type="submit"
-                    className="text-gray-300 hover:text-white gap-2 cursor-pointer"
+                    className="text-gray-300 gap-2 cursor-pointer"
                 >
                     <LogOut className="w-4 h-4" />
                     Sign Out
